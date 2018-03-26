@@ -1,0 +1,51 @@
+\begin{tabular}{|l|l|p{10cm}|}
+\hline
+Type & Notation & Definition \\
+\hline
+
+\multirow{10}{3cm}{Queue Specification} 
+
+& $\lambda$ & Rate parameter of exponential inter-arrival distribution $f_\delta = \text{Exp}(\lambda)$ for $M/M/K$ queue. \\
+& $\mu$ & Rate parameter of exponential service distribution $f_{\mathbf{s}} = \text{Exp}(\mu)$ for $M/M/K$ queue.  \\
+& $\rho := \frac{\lambda}{K \mu}$ & Traffic intensity, defined only for $M/M/K$ queues. \\ 
+& $\theta_{I}$ & Parameters of arrival and service joint distribution for QDC, $(\mathbf{a}, \mathbf{s}) \sim f_{\mathbf{a}, \mathbf{s}}(\cdot | \theta_I )$. \\
+
+& $K$ & Number of servers. \\
+& $C$ & Capacity of system.  \\
+& $n$ & Total number of customers. \\
+& $R$ & Service discipline of queue. \\
+& FCFS & First come first serve (Type of service discipline) \\
+& $L$ & Number of knot locations for server changes \\
+
+\hline
+
+\multirow{8}{3cm}{Input/Output} 
+& $\mathbf{a} = (a_1, \cdots, a_n )$ & Arrival process, where $a_i$ is the time at which the $i$th customer arrives at the queue. \\
+
+& $\mathbf{\delta} = (\delta_1, \cdots, \delta_n )$ & Inter-arrival process, where $\delta_i$ is $a_i - a_{i-1} \quad \forall i \in 1:n$ and $\delta_1 = a_1$. \\
+
+& $\mathbf{s} = (s_1, \cdots, s_n )$ & Service process, where $s_i$ is the service time of the $i$th customer. \\
+
+& $\mathbf{d} = (d_1, \cdots, d_n )$ & Departure process, where $d_i$ is the time at which the $i$th customer leaves the queue after being served. \\
+
+& $\mathbf{p} = (p_1, \cdots, p_n )$ & Server process, where $p_i$ is the server who served the $i$th customer. \\
+
+& $\mathbf{b} = (b_1, \cdots, b_K )$ & This vector represents the time at which each server $1:K$ will next be free. We consider this vector to be the state of the system. \\ 
+
+& $\mathbf{x} = (x_1, \cdots, x_L )$ & Change times for number of open servers. \\ 
+
+& $\mathbf{y} = (y_1, \cdots, y_{L+1} )$ & Number of open servers in each epoch. \\
+
+
+
+\hline
+
+\multirow{4}{3cm}{Performance Measures}
+
+& $N(t)$ & Number of customers in system at time $t$. \\
+& $\bar{B}$ & Time average number of busy servers, referred to as ``Resource utilization". \\
+& $\bar{w}$ & Average waiting time per customer. \\
+
+\hline
+
+\end{tabular}
