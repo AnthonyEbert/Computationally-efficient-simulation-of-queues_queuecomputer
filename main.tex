@@ -305,6 +305,8 @@ With the algorithms so far presented we can simulate from a very general set of 
 
 Tandem queueing networks can be simulated by using the output of one queueing system as the input to the next queueing system. We demonstrate this idea with the Airport Simulation examples in Section \ref{ssec:largerairport}. Fork/join queueing networks are addressed in the next section where we explain the implementation details of \pkg{queuecomputer} with regards to the QDC algorithm.  
 
+\newpage
+
 \section{Usage} \label{sec:usage}
 
 The purpose of the package \pkg{queuecomputer} is to compute, deterministically, the output of a queueing system given the arrival and service times for all customers. The most important function is \code{queue\_step}. The first argument to  \code{queue\_step} is a vector of arrival times, the second argument is a vector of service times and the third argument specifies the servers available. 
@@ -478,7 +480,7 @@ Mean waiting time:
 Mean response time:
  1.44
 Utilization factor:
- 0.666
+ 0.666140156160826
 Mean queue length:
  0.889
 Mean number of customers in system:
@@ -488,7 +490,7 @@ Mean number of customers in system:
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width = 0.7\textwidth]{figures/theoretical.pdf}
+  \includegraphics[width = 0.5\textwidth]{figures/theoretical.pdf}
   \caption{Comparison of theoretical equilibrium $\Prob(N)$ and observed proportions from simulation. Observation $N = 1$ is obscured by $N = 2$.}
   \label{fig:theoretical}
 \end{figure}
@@ -515,12 +517,14 @@ Clearly QDC and its implementation \pkg{queuecomputer} are a more computationall
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width = 0.7\textwidth]{figures/benchmark_081.pdf}
+  \includegraphics[width = 0.7\textwidth]{figures/benchmark_083.pdf}
   \caption{Computation time in milliseconds for varying numbers of passengers for each DES/queueing package. Each package returns exactly the same set of departure times, since the same arrival and service times are supplied. The computation time reported here is the median time of 100 runs for each number of customers and each package. Intel (R) Core(TM) i7-6700
 CPU @ 3.40GHz running Debian GNU/Linux.
  }
   \label{fig:bm_numberofpassengers}
 \end{figure}
+
+\newpage
 
 \section{Examples} \label{sec:Examples}
 
@@ -548,7 +552,7 @@ R> service <- rexp(20, 0.5)
 R> head(service)
 \end{Sinput}
 \begin{Soutput}
-[1] 2.4245155 1.1304372 0.3815756 0.5626325 2.0107932 1.4076141
+[1] 2.6669670 1.2434810 0.4197332 0.6188957 2.2118725 1.5483755
 \end{Soutput}
 \end{CodeChunk}
 
@@ -561,15 +565,15 @@ R> queue_obj <- queue_step(arrivals, service, servers = 2,
 R> head(queue_obj$departures_df)
 \end{Sinput}
 \begin{Soutput}
-# A tibble: 6 × 7
-   labels  arrivals   service departures      waiting system_time server
-    <chr>     <dbl>     <dbl>      <dbl>        <dbl>       <dbl>  <dbl>
-1 Kwabena 0.7551818 2.6669670   3.422149 0.000000e+00    2.666967      1
-2 Beatriz 1.9368246 1.2434810   3.180306 0.000000e+00    1.243481      2
-3 Dashawn 2.0825313 0.4197332   3.600039 1.097774e+00    1.517507      2
-4  Karina 2.2223266 0.6188957   4.041045 1.199822e+00    1.818718      1
-5    Ilea 2.6583952 2.2118725   5.811911 9.416435e-01    3.153516      2
-6 Brianna 5.5533638 1.5483755   7.101739 2.220446e-16    1.548376      1
+# A tibble: 6 x 7
+  labels   arrivals service departures  waiting system_time server
+  <chr>       <dbl>   <dbl>      <dbl>    <dbl>       <dbl>  <int>
+1 Johatam     0.755   2.67        3.42 0.              2.67      1
+2 Beatriz     1.94    1.24        3.18 0.              1.24      2
+3 Devante     2.08    0.420       3.60 1.10e+ 0        1.52      2
+4 Shaahira    2.22    0.619       4.04 1.20e+ 0        1.82      1
+5 Ilea        2.66    2.21        5.81 9.42e- 1        3.15      2
+6 Brianna     5.55    1.55        7.10 2.22e-16        1.55      1
 \end{Soutput}
 \end{CodeChunk}
 
@@ -623,7 +627,7 @@ Mean waiting time:
 Mean response time:
  3.69
 Utilization factor:
- 0.834
+ 0.834333359602573
 Mean queue length:
  0.858
 Mean number of customers in system:
@@ -641,28 +645,28 @@ R> plot(queue_obj, which = c(2, 4, 5, 6)
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.6\textwidth]{figures/hist_081.pdf}
+\includegraphics[width = 0.6\textwidth]{figures/hist_083.pdf}
 \caption{Histogram of arrival and departure times for all customers.}
 \label{fig:histogram}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.6\textwidth]{figures/qlength_081.pdf}
+\includegraphics[width = 0.6\textwidth]{figures/qlength_083.pdf}
 \caption{Plot of queue length and number of customers in system over time.}
 \label{fig:qlength}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.6\textwidth]{figures/customers_081.pdf}
+\includegraphics[width = 0.6\textwidth]{figures/customers_083.pdf}
 \caption{Waiting and service times for each customer. }
 \label{fig:customers}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.6\textwidth]{figures/ecdf_081.pdf}
+\includegraphics[width = 0.6\textwidth]{figures/ecdf_083.pdf}
 \caption{Empirical cumulative distribution functions for arrival and departure times. For each time the different of the functions is equal to the number of customers currently in the system (in queue and currently being served).}
 \label{fig:ecdf}
 \end{figure}
@@ -689,20 +693,20 @@ We have a synthetic dataset of passengers \code{ID} from 120 flights \code{Fligh
 R> Passenger_df
 \end{Sinput}
 \begin{Soutput}
-# A tibble: 25,012 × 7
-                  ID FlightNo arrival  route_imm arrive_imm service_imm
-               <chr>   <fctr>   <dbl>     <fctr>      <dbl>       <dbl>
-1     Cordell, Megan   ABI481  564.85     manual   566.8549  0.29075606
-2    Matheson, Dylan   ABI481  564.85     manual   566.8532  0.15927226
-3      Avitia, Renee   ABI481  564.85     manual   567.2014  0.22450319
-4       Woods, Tyrel   ABI481  564.85 smart gate   566.8377  0.18222445
-5   Pope, Christiana   ABI481  564.85 smart gate   566.0994  0.09031344
-6   Espinoza, Mariah   ABI481  564.85 smart gate   566.8928  0.43900281
-7  Pacheco, Charleen   ABI481  564.85     manual   567.5558  0.12917143
-8    Harmon, Brendan   ABI481  564.85 smart gate   566.3114  0.30565961
-9   William, Gerardo   ABI481  564.85 smart gate   567.2563  0.31975687
-10       Hood, Colen   ABI481  564.85 smart gate   567.2181  0.33944458
-# ... with 25,002 more rows, and 1 more variables: bag_time <dbl>
+# A tibble: 25,012 x 7
+   ID            FlightNo arrival route_imm arrive_imm service_imm bag_time
+   <chr>         <fct>      <dbl> <fct>          <dbl>       <dbl>    <dbl>
+ 1 al-Akhtar, F  ABI481      565. manual          567.      0.291      574.
+ 2 Mcknight, De  ABI481      565. manual          567.      0.159      574.
+ 3 Fountain, Na  ABI481      565. manual          567.      0.225      574.
+ 4 Woods, Tyrel  ABI481      565. smart ga        567.      0.182      575.
+ 5 Peterson, Ch  ABI481      565. smart ga        566.      0.0903     575.
+ 6 Ruiz, Arlen   ABI481      565. smart ga        567.      0.439      575.
+ 7 Quick Bear,   ABI481      565. manual          568.      0.129      575.
+ 8 Harmon, Bren  ABI481      565. smart ga        566.      0.306      575.
+ 9 Caldwell, De  ABI481      565. smart ga        567.      0.320      575.
+10 Hood, Colen   ABI481      565. smart ga        567.      0.339      575.
+# ... with 25,002 more rows
 \end{Soutput}
 \end{CodeChunk}
 
@@ -733,19 +737,19 @@ R> Passenger_df %>%
 +    select(FlightNo, arrive_imm, departures_imm, departures_bc)
 \end{Sinput}
 \begin{Soutput}
-# A tibble: 25,012 × 4
+# A tibble: 25,012 x 4
    FlightNo arrive_imm departures_imm departures_bc
-     <fctr>      <dbl>          <dbl>         <dbl>
-1    ABI481   566.8549       578.8443      578.8443
-2    ABI481   566.8532       578.6479      578.6479
-3    ABI481   567.2014       579.6133      579.6133
-4    ABI481   566.8377       571.9148      574.6535
-5    ABI481   566.0994       570.2073      574.7161
-6    ABI481   566.8928       572.2135      574.7912
-7    ABI481   567.5558       579.9953      579.9953
-8    ABI481   566.3114       570.6290      574.8944
-9    ABI481   567.2563       573.3438      574.8996
-10   ABI481   567.2181       573.1459      574.9295
+   <fct>         <dbl>          <dbl>         <dbl>
+ 1 ABI481         567.           579.          579.
+ 2 ABI481         567.           579.          579.
+ 3 ABI481         567.           580.          580.
+ 4 ABI481         567.           572.          575.
+ 5 ABI481         566.           570.          575.
+ 6 ABI481         567.           572.          575.
+ 7 ABI481         568.           580.          580.
+ 8 ABI481         566.           571.          575.
+ 9 ABI481         567.           573.          575.
+10 ABI481         567.           573.          575.
 # ... with 25,002 more rows
 \end{Soutput}
 \end{CodeChunk}
@@ -762,21 +766,20 @@ R> Passenger_df %>%
 +    )
 \end{Sinput}
 \begin{Soutput}
-Source: local data frame [240 x 4]
-Groups: FlightNo [?]
-
-   FlightNo  route_imm waiting_imm waiting_bc
-     <fctr>     <fctr>       <dbl>      <dbl>
-1    ABI481     manual  11.2718493   6.292506
-2    ABI481 smart gate   4.9586928  12.276112
-3    AEB843     manual   0.8497289  16.594387
-4    AEB843 smart gate   1.0133830  16.412237
-5    ARH364     manual  12.5063642   3.795084
-6    ARH364 smart gate   7.3569441   8.169201
-7    BCH445     manual   1.8033024  13.700561
-8    BCH445 smart gate   1.4368622  15.087956
-9    BJN726     manual  19.5150170   2.064476
-10   BJN726 smart gate   7.2110772   9.751714
+# A tibble: 240 x 4
+# Groups:   FlightNo [?]
+   FlightNo route_imm  waiting_imm waiting_bc
+   <fct>    <fct>            <dbl>      <dbl>
+ 1 ABI481   manual          11.3         6.29
+ 2 ABI481   smart gate       4.96       12.3 
+ 3 AEB843   manual           0.850      16.6 
+ 4 AEB843   smart gate       1.01       16.4 
+ 5 ARH364   manual          12.5         3.80
+ 6 ARH364   smart gate       7.36        8.17
+ 7 BCH445   manual           1.80       13.7 
+ 8 BCH445   smart gate       1.44       15.1 
+ 9 BJN726   manual          19.5         2.06
+10 BJN726   smart gate       7.21        9.75
 # ... with 230 more rows
 \end{Soutput}
 \begin{Sinput}
@@ -788,11 +791,11 @@ R> Passenger_df %>%
 +    )
 \end{Sinput}
 \begin{Soutput}
-# A tibble: 2 × 3
-   route_imm waiting_imm waiting_bc
-      <fctr>       <dbl>      <dbl>
-1     manual    8.252137   9.559913
-2 smart gate    4.488549  12.786145
+# A tibble: 2 x 3
+  route_imm  waiting_imm waiting_bc
+  <fct>            <dbl>      <dbl>
+1 manual            8.25       9.56
+2 smart gate        4.49      12.8
 \end{Soutput}
 \end{CodeChunk}
 
