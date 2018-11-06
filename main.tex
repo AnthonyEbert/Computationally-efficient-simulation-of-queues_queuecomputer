@@ -47,7 +47,7 @@ Large networks of queueing systems model important real-world systems such as Ma
 
 We present a computationally efficient method for simulating from a very general set of queueing networks with the \proglang{R} package \textbf{queuecomputer}. Remarkable speedups of more than 2 orders of magnitude are observed relative to the popular DES packages \pkg{simmer} and \pkg{simpy}. We replicate output from these packages to validate the package. 
 
-The package is modular and integrates well with the popular \proglang{R} package \pkg{dplyr}. Complex queueing networks with tandem, parallel and fork/join topologies can easily be built with these two packages together. We show how to use this package with two examples: a call-centre and an airport terminal. 
+The package is modular and integrates well with the popular \proglang{R} package \pkg{dplyr}. Complex queueing networks with tandem, parallel and fork/join topologies can easily be built with these two packages together. We show how to use this package with two examples: a call-center and an airport terminal. 
 }
 \Keywords{queues, queueing theory, discrete event simulation, 
 operations research, approximate Bayesian computation, \proglang{R}}
@@ -83,9 +83,9 @@ operations research, approximate Bayesian computation, R} %% without formatting
 % Might take this out
 % Queueing theory is the study of queueing systems and originated from the work of Agner Krarup Erlang in 1909 to plan infrastructure requirements for the Danish telephone system \citep[pg 2]{thomopoulos2012fundamentals}. In a queueing system there are customers $i = 1, 2, \cdots$ and servers, who serve the customers. The customers have arrival times $\mathbf{a} = (a_1, a_2, \cdots )$, where $a_i$ is the arrival time of customer $i$. The servers can serve only one customer at a time. The time that each customer needs from the server are represented by the service times $\mathbf{s} = (s_1, s_2, \cdots )$, where $s_i$ is the service time of customer $i$. Once a customer has been served they depart the queue, represented by the departure process $\mathbf{d} = (d_1, d_2, \cdots )$, where $d_i$ is the departure time of customer $i$. 
 
-% This is a useful model for many real-world applications where the customer/server analogy applies such as: \citet{koole2002queueing} (call centres); \citet{lakshmi2013application} (hospitals); \cite{cao2003web} (web servers) and \citet{papadopoulos1996queueing} (manufacturing systems). For a detailed introduction to queueing theory see \citet{medhi2002stochastic,bhat2015introduction}. 
+% This is a useful model for many real-world applications where the customer/server analogy applies such as: \citet{koole2002queueing} (call centers); \citet{lakshmi2013application} (hospitals); \cite{cao2003web} (web servers) and \citet{papadopoulos1996queueing} (manufacturing systems). For a detailed introduction to queueing theory see \citet{medhi2002stochastic,bhat2015introduction}. 
 
-The queues we encounter in our everyday experience, where customers wait in line to be served by a server, is a useful analogy for many other processes. We say analogy because the word customers could represent: MapReduce jobs \citep{lin_joint_2013}; patients in a hospital \citep{takagi_queueing_2016}; items in a manufacturing system \citep{dallery_manufacturing_1992}; calls to a call center \citep{gans_telephone_2003}; shipping containers in a seaport \citep{kozan_comparison_1997} or even cognitive tasks \citep{cao_queueing_2013}. Similarly server could represent: a compute cluster; medical staff; machinery or a customer service representative at a call centre. Queueing systems can also be networked together to form queueing networks. We can use queueing networks to build models of processes such as provision of internet services \citep{sutton_bayesian_2011}, passenger facilitation at international airports \citep{wu_review_2013} and emergency evacuations \citep{van_woensel_modeling_2007}. Clearly queueing systems and queueing networks are useful for understanding important real-world systems. 
+The queues we encounter in our everyday experience, where customers wait in line to be served by a server, are a useful analogy for many other processes. We say analogy because the word customers could represent: MapReduce jobs \citep{lin_joint_2013}; patients in a hospital \citep{takagi_queueing_2016}; items in a manufacturing system \citep{dallery_manufacturing_1992}; calls to a call center \citep{gans_telephone_2003}; shipping containers in a seaport \citep{kozan_comparison_1997} or even cognitive tasks \citep{cao_queueing_2013}. Similarly server could represent: a compute cluster; medical staff; machinery or a customer service representative at a call center. Queueing systems can also be networked together to form queueing networks. We can use queueing networks to build models of processes such as provision of internet services \citep{sutton_bayesian_2011}, passenger facilitation at international airports \citep{wu_review_2013} and emergency evacuations \citep{van_woensel_modeling_2007}. Clearly queueing systems and queueing networks are useful for understanding important real-world systems. 
 
 Performance measures for a given queueing system can often only be derived through simulation. Queues are usually simulated with discrete event simulation (DES) \citep[pg. 226]{insua2012bayesian}. In DES changes in state are discontinuous. The state is acted upon by a countable list of events at certain times which cause the discontinuities. If the occurrence of an event is independent of everything except simulation time it is determined, otherwise it is contingent \citep{nance1981time}. 
 
@@ -93,7 +93,7 @@ Popular DES software packages are available in many programming languages includ
 
 \pkg{queuecomputer} \citep{Rpkg_queuecomputer} implements an algorithm that can easily be applied to a wide range of queueing systems and networks of queueing systems. It is vastly more computationally efficient than existing approaches to DES. We term this new computationally efficient algorithm queue departure computation (QDC). Computational efficiency is important because if we can simulate from queues quickly then we can embed a queue simulation within an approximate Bayesian computation (ABC) algorithm \citep{sunnaker_approximate_2013} and estimate queue parameters for very complicated queueing models in a straight forward manner. 
 
-In Section \ref{sec:queueing} we review the literature on queueing theory and develop notation used throughout this paper. In Section \ref{sec:QDC} we present the QDC algorithm and compare it to DES. We demonstrate usage of the package in Section \ref{sec:usage}. Details of implementation and usage are discussed in Section \ref{sec:Implementation}. The package is validated in Section \ref{sec:Validation} by replicating results from DES packages \pkg{simpy} and \pkg{simmer}. We compare computed performance measures from the output of a \pkg{queuecomputer} simulation to theoretical results for $M/M/2$ queueing systems. We benchmark the package in Section \ref{sec:Benchmark} and compare computation time with \pkg{simpy} and \pkg{simmer}. Examples in Section \ref{sec:Examples} are used to demonstrate how the package can be used to simulate a call centre and an international airport terminal. 
+In Section \ref{sec:queueing} we review the literature on queueing theory and develop notation used throughout this paper. In Section \ref{sec:QDC} we present the QDC algorithm and compare it to DES. We demonstrate usage of the package in Section \ref{sec:usage}. Details of implementation and usage are discussed in Section \ref{sec:Implementation}. The package is validated in Section \ref{sec:Validation} by replicating results from DES packages \pkg{simpy} and \pkg{simmer}. We compare computed performance measures from the output of a \pkg{queuecomputer} simulation to theoretical results for $M/M/2$ queueing systems. We benchmark the package in Section \ref{sec:Benchmark} and compare computation time with \pkg{simpy} and \pkg{simmer}. Examples in Section \ref{sec:Examples} are used to demonstrate how the package can be used to simulate a call center and an international airport terminal. 
 
 \section{Queueing theory} \label{sec:queueing}
 
@@ -101,7 +101,7 @@ Queueing theory is the study of queueing systems and originated from the work of
 
 A queueing system is defined as follows. Each customer $i = 1,2,\cdots$ has an arrival time $a_i$ (or equivalently an inter-arrival time $\delta_i = a_i - a_{i-1}$, $a_0 = 0$) and an amount of time they require with a server, called the service time $s_i$. Typically a server can serve only one customer at a time. A server which is currently serving another customer is said to be unavailable, a server without a customer is available. If all servers are unavailable when a customer arrives then customers must wait in the queue until a server is available. Detailed introductions to queueing systems can be found in standard texts such as \citet{bhat2015introduction}. 
 
-The characteristics of a queueing system is expressed with the notation of \citet{kendall1953stochastic}. This notation has since been extended to six characteristics:
+The characteristics of a queueing system are expressed with the notation of \citet{kendall1953stochastic}. This notation has since been extended to six characteristics:
 \begin{itemize}
 \item $f_{\mathbf{\delta}}$, inter-arrival distribution;
 \item $f_{\mathbf{s}}$, service distribution; 
@@ -122,32 +122,32 @@ Managers and planners are less interested in parameter inference and more intere
 In the case of a $M/M/K$ system equilibrium distributions for performance measures are derived analytically, they are found in standard queueing theory textbooks \citep{lipsky2008queueing, thomopoulos2012fundamentals}. For instance the limit probability of $N$ customers in the system $\Prob(N)$  is
 
 \begin{align}
-\Prob(0) &= \left[\frac{ (K \rho)^K}{K! (1 - \rho)} + 1 + \sum_{i=1}^{K-1} \frac{(K \rho)^i}{i!}   \right]^{-1} \\
+\Prob(0) &= \left[\frac{ (K \rho)^K}{K! (1 - \rho)} + 1 + \sum_{i=1}^{K-1} \frac{(K \rho)^i}{i!}   \right]^{-1} \nonumber \\
 \Prob(N) &= \begin{cases} 
 \Prob(0) \frac{(K \rho)^n }{N!} & \quad  N \leq K\\
-\Prob(0) \frac{(K \rho)^n }{K! K^{N-K}} & \text{otherwise}
+\Prob(0) \frac{(K \rho)^n }{K! K^{N-K}} & \text{otherwise} 
 \end{cases} \label{eq:pn}
 \end{align}
 
 where $\rho$, the resource utilization, is defined as $\frac{\lambda}{K \mu}$. For an $M/M/K$ system this is equal to the expected number of busy servers divided by the total number of servers $\frac{\E(B)}{K}$ \citep[pg. 451]{cassandras2009introduction}. The expected number of customers in the system is \citep{bhat2015introduction}  
 
 \begin{align}
-\E(N) = K\rho + \frac{\rho (K\rho)^K P(0)}{K!(1-\rho)^2},
+\E(N) = K\rho + \frac{\rho (K\rho)^K P(0)}{K!(1-\rho)^2} \label{eq:en},
 \end{align}
 
 and the expected waiting time is
 
 \begin{align}
-\E(\mathbf{w}) = \frac{(K \rho)^K P(0)}{K! K \mu(1-\rho)^2}.
+\E(\mathbf{w}) = \frac{(K \rho)^K P(0)}{K! K \mu(1-\rho)^2} \label{eq:ew}.
 \end{align}
 
-If the parameters of $f_\delta$ and $f_{\mathbf{s}}$ are uncertain then we must turn to predictive distributions for estimates of performance measures. Predictive distributions of performance measures using Bayesian posterior distributions are derived by \citet{armero1994bayesian, armero1999dealing}.  
+If the parameters of $f_\delta$ and $f_{\mathbf{s}}$ are uncertain then we must turn to predictive distributions for estimates of performance measures, where are computed analytically for M/M/K queues (Equations \ref{eq:en} and \ref{eq:ew}). Predictive distributions of performance measures using Bayesian posterior distributions are derived by \citet{armero1994bayesian, armero1999dealing}.  
 
 \citet{jackson_networks_1957} was one of the first to consider networks of queueing systems. In a Jackson network there is a set of $J$ queueing systems. After a customer is served by queueing system $j$ they arrive at another queueing system with fixed probability $p_{j,k}$. Customers leave the system with probability $1 - \sum_{k=1}^{J} p_{j,k}$. Other examples of queueing networks include the tandem \citep{glynn_departures_1991}, parallel \citep{hunt_fast_1995} and the fork/join \citep{kim_analysis_1989} topologies. 
 
 In a tandem queueing network, customers traverse an ordered series of queues before departing the system. Real examples of such systems include airport terminals, internet services and manufacturing systems. In a parallel network, customers are partitioned into different $\mathbf{(a,s)}$ to be seen by separate queueing systems. In a fork/join network a task (another term for customer) is forked into a number of subtasks which are to be completed by distinct parallel servers. The difference from the parallel network is that the task can only depart the system once all subtasks have arrived at the join point. 
 
-Most models of queueing systems assume time-invariant inter-arrival and service processes. In practice many real-world queues have inter-arrival processes which are strongly time-dependent, such as: call-centres \citep{weinberg2007bayesian, brown2005statistical}, airport runways \citep{koopman1972air} and hospitals \citep{brahimi_queueing_1991}. In the case of the $M/M/1$ queue we can adapt the notation to $M(t)/M(t)/1$ to represent exponential  processes where parameters $\lambda(t)$ and $\mu(t)$ change with time. Such queueing systems are referred to as dynamic queueing systems.  
+Most models of queueing systems assume time-invariant inter-arrival and service processes. In practice many real-world queues have inter-arrival processes which are strongly time-dependent, such as: call-centers \citep{weinberg2007bayesian, brown2005statistical}, airport runways \citep{koopman1972air} and hospitals \citep{brahimi_queueing_1991}. In the case of the $M/M/1$ queue we can adapt the notation to $M(t)/M(t)/1$ to represent exponential  processes where parameters $\lambda(t)$ and $\mu(t)$ change with time. Such queueing systems are referred to as dynamic queueing systems.  
 
 In general, analytic solutions do not exist for dynamic queueing systems \citep{malone1995dynamic, worthington2009reflections}. \citet{green1991some} showed that using stationary queueing systems to model dynamic queueing systems leads to serious error even if deviation from stationarity is slight. The problem is compounded once we consider queueing networks. Understanding long-term and transient behaviour of such queues can only be achieved with approximation methods or simulation. We now detail the QDC algorithm, a computationally efficient method for simulating queueing systems. 
 
@@ -155,7 +155,7 @@ In general, analytic solutions do not exist for dynamic queueing systems \citep{
 
 \subsection{Fixed number of servers}
 
-QDC can be considered as a multi-server extension to an algorithm presented by \citet{lindley_theory_1952}. For a single server queueing system, the departure time of the $i$th customer is: $d_i = \max{(a_i, d_{i-1})} + s_i$, since the customer either waits for a server or the server waits for a customer. The algorithm (not the paper) was, surprisingly, not extended to multi-server systems until \citet{krivulin_recursive_1994}. However with each new customer $i$ the algorithm must search a growing $i+1$ length vector. This algorithm therefore scales poorly, with computational complexity $O(n^2)$, where $n$ is number of customers. \citet{kin_generalized_2010} adapted the original algorithm of \citet{kiefer_theory_1955} to an $O(nK)$ algorithm for multiserver tandem queues with blocking, that is $G/G/K/C$ queueing systems where $C$ is the maximum capacity number of customers in the queueing systems. 
+QDC can be considered as a multiserver extension to an algorithm presented by \citet{lindley_theory_1952}. For a single server queueing system, the departure time of the $i$th customer is: $d_i = \max{(a_i, d_{i-1})} + s_i$, since the customer either waits for a server or the server waits for a customer. The algorithm (not the paper) was, surprisingly, not extended to multiserver systems until \citet{krivulin_recursive_1994}. However with each new customer $i$ the algorithm must search a growing $i+1$ length vector. This algorithm therefore scales poorly, with computational complexity $O(n^2)$, where $n$ is number of customers. \citet{kin_generalized_2010} adapted the original algorithm of \citet{kiefer_theory_1955} to an $O(nK)$ algorithm for multiserver tandem queues with blocking, that is $G/G/K/C$ queueing systems where $C$ is the maximum capacity number of customers in the queueing systems. 
 
 QDC can also be viewed as a computationally efficient solution to the set of equations presented in \citet[pg. 259]{sutton_bayesian_2011} for FCFS queueing systems. There is a single queue served by a fixed number of $K$ servers. The $i$th customer observes a set of times $b_i = \{ b_{ik} | k \in 1:K \}$ which represents the times when each server will next be available. The customer $i$ selects the earliest available server $p_i = \text{argmin}(b_i)$ from $b_i$. The departure time for the $i$th customer is therefore $d_i = \max({a_i, b_{p_i}}) + s_i$, since the server must wait for the customer or the customer must wait for the server. The QDC algorithm for a fixed number of servers (Algorithm \ref{alg:fixed_servers}) pre-sorts the arrival times. Rather than assigning a $b_i$ for each customer $i$ to form the matrix $\mathbf{b} \in \mathbf{M}^{n \times K}$, QDC considers $\mathbf{b}$ as a continually updated $K$ length vector representing the state of the system. 
 
@@ -196,7 +196,7 @@ We represent the number of open servers throughout the day as a step function. T
 \forall i \quad \left[ s_i < \min({ x_{l+1} - x_{l} | l \in 1:L }) \right] \label{eq:condition},
 \end{align}
 
-then we need consider a change in state over at most 1 knot location. This step function is determined input by the user. Like the arrival and service times $\mathbf{(a,s)}$ it is changeable by the user before the simulation but not during the simulation. 
+then we need to consider a change in state over at most 1 knot location. This step function is determined input by the user. Like the arrival and service times $\mathbf{(a,s)}$ it is changeable by the user before the simulation but not during the simulation. 
 
 We close server $k$ by writing an $\infty$ symbol to $b_k$ ensuring that no customer can use that server. If the server needs to be open again at time $t$ we write $t$ to $b_k$ allowing customers to use that server. Since $\mathbf{x}$ now corresponds to changes in $\mathbf{b}$ it is part of the event list along with $\mathbf{a}$. The entire event list is still determined and need not be updated mid-simulation. 
 
@@ -411,7 +411,7 @@ R> head(sort(depart(queuecomputer_output)))
 \end{Soutput}
 \end{CodeChunk}
 
-The DES packages \pkg{simmer} and \pkg{simpy} are not built to allow users to input $(\mathbf{a,s})$ directly. Rather, the user supplies parameters for $f_{\delta}$ and $f_{\mathbf{s}}$ so that inter-arrival and service times can be sampled at each step when needed. To allow \pkg{simmer} and \pkg{simpy} to accept presampled input $(\mathbf{a,s})$ we use generator functions in place of the usual \code{rexp(rate)} or \code{random.expovariate(rate)} calls in \proglang{R} and \proglang{Python} respectively, details of this work can be found in the supplementary material. We create an interface to \pkg{simmer} so that it can be called in the same way as \pkg{queuecomputer}. 
+The DES packages \pkg{simmer} and \pkg{simpy} are not built to allow users to input $(\mathbf{a,s})$ directly. Rather, the user supplies parameters for $f_{\delta}$ and $f_{\mathbf{s}}$ so that inter-arrival and service times can be sampled at each step when needed. To allow \pkg{simmer} and \pkg{simpy} to accept presampled input $(\mathbf{a,s})$ we use generator functions instead of \code{rexp(rate)} or \code{random.expovariate(rate)} calls in \proglang{R} and \proglang{Python} respectively, details of this work can be found in the supplementary material. We create an interface to \pkg{simmer} so that it can be called in the same way as \pkg{queuecomputer}. 
 
 \begin{CodeChunk}
 \begin{Sinput}
@@ -528,9 +528,9 @@ CPU @ 3.40GHz running Debian GNU/Linux.
 
 \section{Examples} \label{sec:Examples}
 
-\subsection{Call centre} \label{ssec:callcentre}
+\subsection{Call center} \label{ssec:callcenter}
 
-We demonstrate \pkg{queuecomputer} by simulating a call centre. The arrival time for each customer is the time that they called, the service time is how long it takes for their problem to be resolved once they reach an available customer service representative. Let's assume that the customers arrive by a homogeneous Poisson process over the course of the day. 
+We demonstrate \pkg{queuecomputer} by simulating a call center. The arrival time for each customer is the time that they called, the service time is how long it takes for their problem to be resolved once they reach an available customer service representative. Let's assume that the customers arrive by a homogeneous Poisson process over the course of the day. 
 
 \begin{CodeChunk}
 \begin{Sinput}
@@ -682,7 +682,7 @@ Their bags are unloaded from the flights and proceed to the baggage hall with a 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width = 0.8\textwidth]{figures/Larger_airport.pdf}
-\caption{Diagram of larger airport scenario, there are 120 flights in total and two multi-server queueing systems operate in parallel. Passengers are preassigned to travel through either the ``manual" or ``smart gate" route through immigration. The passengers and bags are ``forked'' when each aircraft arrives are are ``joined'' at the baggage hall. }
+\caption{Diagram of larger airport scenario, there are 120 flights in total and two multiserver queueing systems operate in parallel. Passengers are preassigned to travel through either the ``manual" or ``smart gate" route through immigration. The passengers and bags are ``forked'' when each aircraft arrives are are ``joined'' at the baggage hall. }
 \label{fig:larger_airport}
 \end{figure}
 
@@ -817,13 +817,13 @@ We can quickly build a complex dynamic queueing model involving tandem, parallel
 
 \section{Conclusion}
 
-The \proglang{R} package \pkg{queuecomputer} implements QDC. It can be used to simulate any queueing systems or tandem network of queueing systems of general form $G(t)/G(t)/K(t)/\infty/n/FCFS$. Fast algorithms for multi-server queueing systems have been proposed in the past \citep{krivulin_recursive_1994,sutton_inference_2010,kin_generalized_2010}. These algorithms have generated little notice, even in the cases where their computational efficiency is demonstrated \citep{kin_generalized_2010}. QDC is conceptually simpler, more efficient memory-wise and modular. 
+The \proglang{R} package \pkg{queuecomputer} implements QDC. It can be used to simulate any queueing systems or tandem network of queueing systems of general form $G(t)/G(t)/K(t)/\infty/n/FCFS$. Fast algorithms for multiserver queueing systems have been proposed in the past \citep{krivulin_recursive_1994,sutton_inference_2010,kin_generalized_2010}. These algorithms have generated little notice, even in the cases where their computational efficiency is demonstrated \citep{kin_generalized_2010}. QDC is conceptually simpler, more efficient memory-wise and modular. 
 
 We validated QDC with analytic results and by replicating output generated by existing DES packages \pkg{simpy} and \pkg{simmer}. We observe speedups of up to 3 orders of magnitude. The speed of the package will allow queue simulations to be embedded within ABC algorithms, which will be addressed in future work. Unlike existing DES packages, sampling and departure time computation are clearly `decoupled' and therefore allow the user to simulate queueing systems with arrival and service time distributions of arbitrary complexity. The package integrates well with the data manipulation package \pkg{dplyr} and these two packages together allow the user to quickly and easily simulate queueing networks with parallel, tandem and fork/join topologies. 
 
 \section*{Acknowledgements}
 
-This work is supported by the Australian Research Council Centre of Excellence for Mathematical and Statistical Frontiers (ACEMS). This work was funded through the Australian Research Council (ARC) linkage grant ``Improving the Productivity and Efficiency of Australian Airports” (LP140100282).
+This work is supported by the Australian Research Council center of Excellence for Mathematical and Statistical Frontiers (ACEMS). This work was funded through the Australian Research Council (ARC) linkage grant ``Improving the Productivity and Efficiency of Australian Airports” (LP140100282).
 
 \bibliography{references}
 
