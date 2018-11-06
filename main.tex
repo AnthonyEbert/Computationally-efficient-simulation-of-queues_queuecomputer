@@ -80,11 +80,6 @@ operations research, approximate Bayesian computation, R} %% without formatting
 
 \section{Introduction}
 
-% Might take this out
-% Queueing theory is the study of queueing systems and originated from the work of Agner Krarup Erlang in 1909 to plan infrastructure requirements for the Danish telephone system \citep[pg 2]{thomopoulos2012fundamentals}. In a queueing system there are customers $i = 1, 2, \cdots$ and servers, who serve the customers. The customers have arrival times $\mathbf{a} = (a_1, a_2, \cdots )$, where $a_i$ is the arrival time of customer $i$. The servers can serve only one customer at a time. The time that each customer needs from the server are represented by the service times $\mathbf{s} = (s_1, s_2, \cdots )$, where $s_i$ is the service time of customer $i$. Once a customer has been served they depart the queue, represented by the departure process $\mathbf{d} = (d_1, d_2, \cdots )$, where $d_i$ is the departure time of customer $i$. 
-
-% This is a useful model for many real-world applications where the customer/server analogy applies such as: \citet{koole2002queueing} (call centers); \citet{lakshmi2013application} (hospitals); \cite{cao2003web} (web servers) and \citet{papadopoulos1996queueing} (manufacturing systems). For a detailed introduction to queueing theory see \citet{medhi2002stochastic,bhat2015introduction}. 
-
 The queues we encounter in our everyday experience, where customers wait in line to be served by a server, are a useful analogy for many other processes. We say analogy because the word customers could represent: MapReduce jobs \citep{lin_joint_2013}; patients in a hospital \citep{takagi_queueing_2016}; items in a manufacturing system \citep{dallery_manufacturing_1992}; calls to a call center \citep{gans_telephone_2003}; shipping containers in a seaport \citep{kozan_comparison_1997} or even cognitive tasks \citep{cao_queueing_2013}. Similarly, server could represent: a compute cluster; medical staff; machinery or a customer service representative at a call center. Queueing systems can also be networked together to form queueing networks. We can use queueing networks to build models of processes such as provision of internet services \citep{sutton_bayesian_2011}, passenger facilitation at international airports \citep{wu_review_2013} and emergency evacuations \citep{van_woensel_modeling_2007}. Clearly queueing systems and queueing networks are useful for understanding important real-world systems. 
 
 Performance measures for a given queueing system can often only be derived through simulation. Queues are usually simulated with discrete event simulation (DES) \citep[pg. 226]{insua2012bayesian}. In DES changes in state are discontinuous. The state is acted upon by a countable list of events at certain times which cause the discontinuities. If the occurrence of an event is independent of everything except simulation time it is determined; otherwise, it is contingent \citep{nance1981time}. 
@@ -501,15 +496,15 @@ We see that the observed time average number of busy servers is 0.6661402 which 
 
 \subsection{Method}
 
-The compare the computational efficiency of each package we compute the departure times from a $M/M/2/\infty/n/FCFS$ queueing system, with $\lambda = 1$ and $\mu = 1.\dot{1}$. To understand how $n$ affects computation time we repeat the experiment 100 times for n = $ 10^2, 10^3, 10^5$ and $10^6 $. We could only repeat the $n = 10^6$ experiment 10 times for \pkg{simmer} because of memory issues, we also repeat the experiment at $n = 10^7$ for \pkg{queuecomputer}. We compare the median time taken for each combination of package and $n$. 
+The compare the computational efficiency of each package we compute the departure times from a $M/M/2/\infty/n/FCFS$ queueing system, with $\lambda = 1$ and $\mu = 1.\dot{1}$. To understand how $n$ affects computation time we repeat the experiment 100 times for n = $ 10^2, 10^3, 10^5$ and $10^6 $. We also repeat the experiment at $n = 10^7$ for \pkg{queuecomputer}. We compare the median time taken for each combination of package and $n$. 
 
-The simulation was conducted on a system with Intel (R) Core(TM) i7-6700 CPU @ 3.40GHz running Debian GNU/Linux. The version of \proglang{R} is 3.3.3 ``Another Canoe" with \pkg{simmer} version 3.6.1 and \pkg{queuecomputer} version 0.8.1. The version of \proglang{Python} is 3.4.2 with \pkg{simpy} module version 3.6.1.
+The simulation was conducted on a system with Intel (R) Core(TM) i7-6700 CPU @ 3.40GHz running Debian GNU/Linux. The version of \proglang{R} is 3.5.1 ``Feather spray" with \pkg{simmer} version 4.0.1 and \pkg{queuecomputer} version 0.8.3. The version of \proglang{Python} is 3.5.3 with \pkg{simpy} module version 3.0.11.
 
 To assess the computation time for \pkg{queuecomputer} and \pkg{simmer} we use the \code{microbenchmark} function from the \pkg{microbenchmark} package \citep{Rpkg_microbenchmark} with \code{time = 100} and compute the median. Full details can be found in the supplementary material. 
 
 \subsection{Results and discussion}
 
-The median computation time for each package and for varying numbers of customers from $100$ to $10^6$ customers (up to $10^7$ customers for \pkg{queuecomputer}) is shown in Figure~\ref{fig:bm_numberofpassengers}. We observe phenomenal speedups for \pkg{queuecomputer} compared to both packages: compared to \pkg{simpy} speedups of 50 (at 100 customers) to 600 (at $10^6$ customers) are observed, and for \pkg{simmer} speedups of 170 (at 100 customers) to 3100 (at $10^6$ customers) are observed. The speedup is lower for smaller $n$ since \pkg{queuecomputer} approaches a minimum computation time. 
+The median computation time for each package and for varying numbers of customers from $100$ to $10^6$ customers (up to $10^7$ customers for \pkg{queuecomputer}) is shown in Figure~\ref{fig:bm_numberofpassengers}. We observe phenomenal speedups for \pkg{queuecomputer} compared to both packages: compared to \pkg{simpy} speedups of 35 (at 100 customers) to 1000 (at $10^6$ customers) are observed, and for \pkg{simmer} speedups of 50 (at 100 customers) to 300 (at $10^6$ customers) are observed. The speedup is lower for smaller $n$ since \pkg{queuecomputer} approaches a minimum computation time. 
 
 Simulating 10 million customers takes less than 1 second for \pkg{queuecomputer}. We see no reason why queues of different arrival and service distributions should not have similar speedups. This is because, as mentioned earlier, any non-negative $\mathbf{(a,s)}$ could come from two exponential distributions. 
 
@@ -577,7 +572,7 @@ R> head(queue_obj$departures_df)
 \end{Soutput}
 \end{CodeChunk}
 
-We can see that Kwabena arrives first but leaves after Beatriz. This is possible because there are two servers. Kwabena's service took so long that the next two customers were served by the other server. It's easy to see how the departure times were computed in this simple example. Kwabena and Beatriz were the first customers for each server so we can compute their departure time by just adding their service times to their arrival times.
+We can see that Johatam arrives first but leaves after Beatriz. This is possible because there are two servers. Johatam's service took so long that the next two customers were served by the other server. It's easy to see how the departure times were computed in this simple example. Johatam and Beatriz were the first customers for each server so we can compute their departure time by just adding their service times to their arrival times.
 
 \begin{CodeChunk}
 \begin{Sinput}
@@ -589,7 +584,7 @@ R> firstcustomers
  \end{Soutput}
 \end{CodeChunk}
 
-Dashawn, however, had to wait for an available server, since he arrived after the first two customers arrived but before the first two customers departed. He must wait until one of these customers departs before he can be served. We add the departure time of the first customer (Beatriz) to his service time to compute his departure time.
+Devante, however, had to wait for an available server, since he arrived after the first two customers arrived but before the first two customers departed. He must wait until one of these customers departs before he can be served. We add the departure time of the first customer of server 2 (Beatriz) to his service time to compute his departure time.
 
 \begin{CodeChunk}
 \begin{Sinput}
@@ -600,7 +595,7 @@ R> firstcustomers[2] + service[3]
 \end{Soutput}
 \end{CodeChunk}
 
-So the first two customers had no waiting time, but Dashawn had to wait for an available server. We can compute the waiting times for all three customers in this manner:
+So the first two customers had no waiting time, but Devante had to wait for an available server. We can compute the waiting times for all three customers in this manner:
 
 \begin{CodeChunk}
 \begin{Sinput}
