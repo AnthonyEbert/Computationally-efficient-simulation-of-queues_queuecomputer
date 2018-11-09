@@ -43,7 +43,7 @@
 
 %% an abstract and keywords
 \Abstract{
-Large networks of queueing systems model important real-world systems such as MapReduce clusters, web-servers, hospitals, call centers and airport passenger terminals. To model such systems accurately, we must infer queueing parameters from data. Unfortunately, for many queueing networks there is no clear way to proceed with parameter inference from data. Approximate Bayesian computation could offer a straight-forward way to infer parameters for such networks if we could simulate data quickly enough. 
+Large networks of queueing systems model important real-world systems such as MapReduce clusters, web-servers, hospitals, call centers and airport passenger terminals. To model such systems accurately, we must infer queueing parameters from data. Unfortunately, for many queueing networks there is no clear way to proceed with parameter inference from data. Approximate Bayesian computation could offer a straightforward way to infer parameters for such networks if we could simulate data quickly enough. 
 
 We present a computationally efficient method for simulating from a very general set of queueing networks with the \proglang{R} package \textbf{queuecomputer}. Remarkable speedups of more than 2 orders of magnitude are observed relative to the popular DES packages \pkg{simmer} and \pkg{simpy}. We replicate output from these packages to validate the package. 
 
@@ -247,7 +247,7 @@ This algorithm can simulate queues of form $G(t)/G(t)/K(t)/\infty/n/FCFS$, where
 
 \subsubsection{Unconditional case}
 
-If Condition \ref{eq:condition} does not hold or if otherwise, we wish to control exactly which servers are open at what time then we must use a less computationally efficient algorithm (Algorithm \ref{alg:changing_servers_unconditional}). Each server $k$ has its own partition of $L_k$ knot locations $\mathbf{x_k} = (x_{k,1}, \cdots, x_{k,L_k} ) \in \mathbb{R}^{L_k}_{+}$ and each $\mathbf{y_k} = (y_{k,1}, \cdots, y_{k,L_k+1} )$ is an alternating sequence of 0 and 1s of length $L_k$ indicating whether the server is open or closed respectively for the associated epoch. The vector $\mathbf{c}$ is used slightly differently to how it is used in \citet{sutton_bayesian_2011}. We use it to represent the time at which each server is next available for the current customer $i$, given the current system state $\mathbf{b}$. It is the output of the \code{next\_fun} function. 
+If Condition \ref{eq:condition} does not hold or if, otherwise, we wish to control exactly which servers are open at what time then we must use a less computationally efficient algorithm (Algorithm \ref{alg:changing_servers_unconditional}). Each server $k$ has its own partition of $L_k$ knot locations $\mathbf{x_k} = (x_{k,1}, \cdots, x_{k,L_k} ) \in \mathbb{R}^{L_k}_{+}$ and each $\mathbf{y_k} = (y_{k,1}, \cdots, y_{k,L_k+1} )$ is an alternating sequence of 0 and 1s of length $L_k$ indicating whether the server is open or closed respectively for the associated epoch. The vector $\mathbf{c}$ is used slightly differently to how it is used in \citet{sutton_bayesian_2011}. We use it to represent the time at which each server is next available for the current customer $i$, given the current system state $\mathbf{b}$. It is the output of the \code{next\_fun} function. 
 
 \begin{algorithm}[ht!]
 \caption{Next function}
