@@ -7,5 +7,5 @@
 	* python3 modules: 
 		simpy, importr, time, csv, numpy, getopt, sys, mpmath
 
-1. Change working directory to this directory
-2. Run jss3041.sh
+2. Change working directory to this directory
+3. Run jss3041.sh
