@@ -1,13 +1,4 @@
-
-
----
-title: "Replication script"
-author: "Anthony Ebert"
-date: "27 February 2017"
-output: pdf_document
----
-
-
 # Steps to replication
 
-1. Run jss3041.sh
+1. Change working directory to this directory
+2. Run jss3041.sh
