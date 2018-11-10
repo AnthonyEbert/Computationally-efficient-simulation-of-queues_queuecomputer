@@ -3,7 +3,7 @@
 
 library(queuecomputer)
 library(dplyr)
-library(magrittr)
+#library(magrittr)
 library(randomNames)
 library(FAdist)
 library(ggplot2)
@@ -31,7 +31,7 @@ RandomFlightNumbers <- function(n){
   
   output$Passengers = rbinom(n, size = 260, prob = 0.8)
   output$arrival = round(rbeta(n, 2, 4) * 960 + 360, 2)
-  output %<>% mutate(chocks = 
+  output <- output %>% mutate(chocks = 
       queue(arrival, service = rep(35, n), servers = 12, serveroutput = TRUE) - 30, 
     gate = attr(chocks, "server")
   )
@@ -93,7 +93,7 @@ if(
   warning("Duplicate flight numbers detected")
 }
 
-FlightSchedule %<>% group_by(FlightNo)
+FlightSchedule <- FlightSchedule %>% group_by(FlightNo)
 
 # Passenger Data --------------------
 
@@ -152,7 +152,7 @@ Passenger_df %>%
 
 
 
-Passenger_df %<>% ungroup()
+Passenger_df <- Passenger_df %>% ungroup()
 
 PQ_df <- Passenger_df %>%
   mutate(start_imm = departures_imm - service_imm) %>%
@@ -178,9 +178,9 @@ ggplot(PQ_df) +
 
 # ggsave("examples/queuelength_dplyr.pdf")
 
-Passenger_df %<>% ungroup()
+Passenger_df <- Passenger_df %>% ungroup()
 
-PBox_df <- Passenger_df %<>%
+PBox_df <- Passenger_df %>%
   mutate(
     immigration = departures_imm - service_imm - arrive_imm,
     baggage = departures_bc - departures_imm,

@@ -1,7 +1,6 @@
 
 cat('Run "python3 simpy_benchmark3.py 4 -v" before this R script \n')
 
-library(iterators)
 library(simmer)
 library(queuecomputer)
 loadNamespace("dplyr")
