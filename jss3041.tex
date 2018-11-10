@@ -485,7 +485,7 @@ Mean number of customers in system:
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width = 0.5\textwidth]{figures/theoretical.pdf}
+  \includegraphics[width = 0.5\textwidth]{Figures/theoretical.pdf}
   \caption{Comparison of theoretical equilibrium $\Prob(N)$ and observed proportions from simulation. Observation $N = 1$ is obscured by $N = 2$.}
   \label{fig:theoretical}
 \end{figure}
@@ -512,7 +512,7 @@ Clearly, QDC and its implementation \pkg{queuecomputer} are a more computational
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width = 0.7\textwidth]{figures/benchmark_083.pdf}
+  \includegraphics[width = 0.7\textwidth]{Figures/benchmark_083.pdf}
   \caption{Computation time in milliseconds for varying numbers of passengers for each DES/queueing package. Each package returns exactly the same set of departure times since the same arrival and service times are supplied. The computation time reported here is the median time of 100 runs for each number of customers and each package. Intel (R) Core(TM) i7-6700
 CPU @ 3.40GHz running Debian GNU/Linux.
  }
@@ -640,28 +640,28 @@ R> plot(queue_obj, which = c(2, 4, 5, 6)
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.6\textwidth]{figures/hist_083.pdf}
+\includegraphics[width = 0.6\textwidth]{Figures/hist_083.pdf}
 \caption{Histogram of arrival and departure times for all customers.}
 \label{fig:histogram}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.6\textwidth]{figures/qlength_083.pdf}
+\includegraphics[width = 0.6\textwidth]{Figures/qlength_083.pdf}
 \caption{Plot of queue length and number of customers in system over time.}
 \label{fig:qlength}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.6\textwidth]{figures/customers_083.pdf}
+\includegraphics[width = 0.6\textwidth]{Figures/customers_083.pdf}
 \caption{Waiting and service times for each customer. }
 \label{fig:customers}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.6\textwidth]{figures/ecdf_083.pdf}
+\includegraphics[width = 0.6\textwidth]{Figures/ecdf_083.pdf}
 \caption{Empirical cumulative distribution functions for arrival and departure times. For each time the different of the functions is equal to the number of customers currently in the system (in queue and currently being served).}
 \label{fig:ecdf}
 \end{figure}
@@ -676,7 +676,7 @@ Their bags are unloaded from the flights and proceed to the baggage hall with a 
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.8\textwidth]{figures/Larger_airport.pdf}
+\includegraphics[width = 0.8\textwidth]{Figures/Larger_airport.pdf}
 \caption{Diagram of larger airport scenario, there are 120 flights in total and two multiserver queueing systems operate in parallel. Passengers are preassigned to travel through either the ``manual" or ``smart gate" route through immigration. The passengers and bags are ``forked'' when each aircraft arrives are then ``joined'' at the baggage hall. }
 \label{fig:larger_airport}
 \end{figure}
@@ -796,14 +796,14 @@ R> Passenger_df %>%
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.8\textwidth]{figures/queuelength_dplyr.pdf}
+\includegraphics[width = 0.8\textwidth]{Figures/queuelength_dplyr.pdf}
 \caption{Queue lengths over the course of the day for ``manual" and ``smart gate" immigration routes. }
 \label{fig:queuelength_dplyr}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width = 0.7\textwidth]{figures/boxplot_dplyr.pdf}
+\includegraphics[width = 0.7\textwidth]{Figures/boxplot_dplyr.pdf}
 \caption{Boxplot of waiting times for each stage of passenger processing within the international airport terminal. }
 \label{fig:boxplot_dplyr.pdf}
 \end{figure}
@@ -823,7 +823,59 @@ This work is supported by the Australian Research Council Centre of Excellence f
 \bibliography{jss3041}
 
 \begin{table}
-\resizebox{0.9\textwidth}{!}{\input{tex/Notation.tex}}
+\resizebox{0.9\textwidth}{!}{
+\begin{tabular}{|l|l|p{10cm}|}
+\hline
+Type & Notation & Definition \\
+\hline
+
+\multirow{10}{3cm}{Queue Specification} 
+
+& $\lambda$ & Rate parameter of exponential inter-arrival distribution $f_\delta = \text{Exp}(\lambda)$ for $M/M/K$ queue. \\
+& $\mu$ & Rate parameter of exponential service distribution $f_{\mathbf{s}} = \text{Exp}(\mu)$ for $M/M/K$ queue.  \\
+& $\rho := \frac{\lambda}{K \mu}$ & Traffic intensity, defined only for $M/M/K$ queues. \\ 
+& $\theta_{I}$ & Parameters of arrival and service joint distribution for QDC, $(\mathbf{a}, \mathbf{s}) \sim f_{\mathbf{a}, \mathbf{s}}(\cdot | \theta_I )$. \\
+
+& $K$ & Number of servers. \\
+& $C$ & Capacity of system.  \\
+& $n$ & Total number of customers. \\
+& $R$ & Service discipline of queue. \\
+& FCFS & First come first serve (Type of service discipline) \\
+& $L$ & Number of knot locations for server changes \\
+
+\hline
+
+\multirow{8}{3cm}{Input/Output} 
+& $\mathbf{a} = (a_1, \cdots, a_n )$ & Arrival process, where $a_i$ is the time at which the $i$th customer arrives at the queue. \\
+
+& $\mathbf{\delta} = (\delta_1, \cdots, \delta_n )$ & Inter-arrival process, where $\delta_i$ is $a_i - a_{i-1} \quad \forall i \in 1:n$ and $\delta_1 = a_1$. \\
+
+& $\mathbf{s} = (s_1, \cdots, s_n )$ & Service process, where $s_i$ is the service time of the $i$th customer. \\
+
+& $\mathbf{d} = (d_1, \cdots, d_n )$ & Departure process, where $d_i$ is the time at which the $i$th customer leaves the queue after being served. \\
+
+& $\mathbf{p} = (p_1, \cdots, p_n )$ & Server process, where $p_i$ is the server who served the $i$th customer. \\
+
+& $\mathbf{b} = (b_1, \cdots, b_K )$ & This vector represents the time at which each server $1:K$ will next be free. We consider this vector to be the state of the system. \\ 
+
+& $\mathbf{x} = (x_1, \cdots, x_L )$ & Change times for number of open servers. \\ 
+
+& $\mathbf{y} = (y_1, \cdots, y_{L+1} )$ & Number of open servers in each epoch. \\
+
+
+
+\hline
+
+\multirow{4}{3cm}{Performance Measures}
+
+& $N(t)$ & Number of customers in system at time $t$. \\
+& $\bar{B}$ & Time average number of busy servers, referred to as ``Resource utilization". \\
+& $\bar{w}$ & Average waiting time per customer. \\
+
+\hline
+
+\end{tabular}
+}
 \caption{Notation and definitions.}
 \end{table}
 
