@@ -210,7 +210,7 @@ Type & Notation & Definition \\
 
 Queue specification
 
-& $\lambda$ & Rate parameter of exponential inter-arrival distribution $f_\delta = \text{exp}(\lambda)$ for $M/M/K$ queue. \\
+& $\lambda$ & Rate parameter of exponential inter-arrival distribution $f_{\boldsymbol{\delta}} = \text{exp}(\lambda)$ for $M/M/K$ queue. \\
 & $\mu$ & Rate parameter of exponential service distribution $f_{\mathbf{s}} = \text{exp}(\mu)$ for $M/M/K$ queue.  \\
 & $\rho := \frac{\lambda}{K \mu}$ & Traffic intensity, defined only for $M/M/K$ queues. \\ 
 & $\theta_{I}$ & Parameters of arrival and service joint distribution for QDC, $(\mathbf{a}, \mathbf{s}) \sim f_{\mathbf{a}, \mathbf{s}}(\cdot | \theta_I )$. \\
@@ -227,7 +227,7 @@ Queue specification
 Input/output
 & $\mathbf{a} = (a_1, \ldots, a_n )$ & Arrival process, where $a_i$ is the time at which the $i$th customer arrives at the queue. \\
 
-& $\mathbf{\delta} = (\delta_1, \ldots, \delta_n )$ & Inter-arrival process, where $\delta_i$ is $a_i - a_{i-1} \quad \forall i \in 1:n$ and $\delta_1 = a_1$. \\
+& $\boldsymbol{\delta} = (\delta_1, \ldots, \delta_n )$ & Inter-arrival process, where $\delta_i$ is $a_i - a_{i-1} \quad \forall i \in 1:n$ and $\delta_1 = a_1$. \\
 
 & $\mathbf{s} = (s_1, \ldots, s_n )$ & Service process, where $s_i$ is the service time of the $i$th customer. \\
 
@@ -237,11 +237,13 @@ Input/output
 
 & $\mathbf{b} = (b_1, \ldots, b_K )$ & This vector represents the time at which each server $1:K$ will next be free. We consider this vector to be the state of the system. \\ 
 
-& $\mathbf{x} = (x_1, \ldots, x_L )$ & Change times for number of open servers. \\ 
+& $\mathbf{x} = (x_1, \ldots, x_L )$ & Change times for number of open servers. Input for Algorithm \ref{alg:changing_servers}. \\ 
 
-& $\mathbf{y} = (y_1, \ldots, y_{L+1} )$ & Number of open servers in each epoch. \\
+& $\mathbf{y} = (y_1, \ldots, y_{L+1} )$ & Number of open servers in each epoch. Input for Algorithm \ref{alg:changing_servers}.  \\
 
+& $\mathbf{\underline{x}} = (\mathbf{x}_1, \ldots, \mathbf{x}_K )$ & List of change times for each server. Input for Algorithm \ref{alg:changing_servers_unconditional}. \\ 
 
+& $\mathbf{\underline{y}} = (\mathbf{y}_1, \ldots, \mathbf{y}_K )$ & List with a Boolean vector for each server. A zero indicates that the server is open, a one indicates that the server is closed for the corresponding epoch in $\mathbf{\underline{x}}$. Input for Algorithm \ref{alg:changing_servers_unconditional}. \\ 
 
 \hline
 
@@ -266,8 +268,8 @@ system will eventually reach equilibrium and distributions of
 performance measures become independent of time.
 
 In the case of a $M/M/K$ system equilibrium distributions for
-performance measures are derived analytically, they are found in
-standard queueing theory textbooks \citep{lipsky2008queueing,
+performance measures can be derived analytically. These derivations are 
+found in standard queueing theory textbooks \citep{lipsky2008queueing,
   thomopoulos2012fundamentals}. For instance, the limit probability of
 $N$ customers in the system $\Prob(N)$ is
 %
@@ -296,7 +298,7 @@ and the expected waiting time is
 \E(\mathbf{w}) = \frac{(K \rho)^K P(0)}{K! K \mu(1-\rho)^2} \label{eq:ew}.
 \end{align}
 %
-If the parameters of $f_\delta$ and $f_{\mathbf{s}}$ are uncertain,
+If the parameters of $f_{\boldsymbol{\delta}}$ and $f_{\mathbf{s}}$ are uncertain,
 then we must turn to predictive distributions for estimates of
 performance measures, which are computed analytically for $M/M/K$
 queues (Equations~\ref{eq:en} and~\ref{eq:ew}). Predictive
@@ -310,12 +312,12 @@ In a tandem queueing network, customers traverse an ordered series of
 queues before departing the system. Real examples of such systems
 include airport terminals, internet services and manufacturing
 systems. In a parallel network, customers are partitioned into
-different $\mathbf{(a,s)}$ to be seen by separate queueing systems. In
-a fork/join network a task (another term for customer) is forked into
+different queueing systems, with their own two vectors $\mathbf{a}$ and $\mathbf{s}$.
+In a fork/join network a task (another term for customer) is split into
 a number of subtasks which are to be completed by distinct parallel
-servers. The difference from the parallel network is that the task can
-only depart the system once all subtasks have arrived at the join
-point.
+servers. The task is only complete once all its associated subtasks arrive
+at the join point. One example of this situation is that of arriving passengers
+and their bags at an airport.
 
 Most models of queueing systems assume time-invariant inter-arrival
 and service processes. In practice, many real-world queues have
@@ -399,7 +401,7 @@ the system.
 
 This algorithm is simple and computationally efficient. At each iteration of the loop, we need only search $\mathbf{b}$, a $K$ length vector for the minimum element in code line~\ref{alg_line:search}. In the language of DES, we consider $\mathbf{b}$ as the system state and $\mathbf{a}$ as the event list, which are all determined events. This differs from conventional DES approaches to modeling queueing systems where the queue length is the system state, and both $\mathbf{a}$ and $\mathbf{d}$ constitute the event list, where the events of $\mathbf{a}$ are determined and the events of $\mathbf{d}$ are continually updated and therefore contingent.  
 
-Algorithm~\ref{alg:fixed_servers} can simulate any queue of the form $G(t)/G(t)/K/\infty/n/\mathit{FCFS}$ where $K$ and $n$ can be made arbitrarily large. Furthermore, the inter-arrival and service distributions can be of completely general form and even have a dependency structure between them. Since the arrival and service times are supplied by the user rather than sampled in-situ, the algorithm ``decouples'' statistical sampling from queue computation. This frees the user to simulate queues of arbitrarily complex $f_{\delta, \mathbf{s}}$, where $K$ is fixed. 
+Algorithm~\ref{alg:fixed_servers} can simulate any queue of the form $G(t)/G(t)/K/\infty/n/\mathit{FCFS}$ where $K$ and $n$ can be made arbitrarily large. Furthermore, the inter-arrival and service distributions can be of completely general form and even have a dependency structure between them. Since the arrival and service times are supplied by the user rather than sampled in-situ, the algorithm ``decouples'' statistical sampling from queue computation. This frees the user to simulate queues of arbitrarily complex $f_{\boldsymbol{\delta}, \mathbf{s}}$, where $K$ is fixed. 
 
 \subsection{Changing the number of servers}
 
@@ -423,7 +425,7 @@ more than one epoch $(x_{l}, x_{l+1}]$, formally
 %
 then we need to consider a change in state over at most 1 knot
 location. This step function is determined input by the user. Like the
-arrival and service times $\mathbf{(a,s)}$ it is changeable by the
+arrival and service times $\mathbf{(a,s)}$, it is changeable by the
 user before the simulation but not during the simulation.
 
 We close server $k$ by writing an $\infty$ symbol to $b_k$ ensuring that no customer can use that server. If the server needs to be open again at time $t$, we write $t$ to $b_k$ allowing customers to use that server. Since $\mathbf{x}$ now corresponds to changes in $\mathbf{b}$, it is part of the event list along with $\mathbf{a}$. The entire event list is still determined and need not be updated mid-simulation. 
@@ -483,7 +485,7 @@ This algorithm can simulate queues of form $G(t)/G(t)/K(t)/\infty/n/\mathit{FCFS
 
 \subsubsection{Unconditional case}
 
-If Condition~\ref{eq:condition} does not hold or if, otherwise, we wish to control exactly which servers are open at what time then we must use a less computationally efficient algorithm (Algorithm~\ref{alg:changing_servers_unconditional}). Each server $k$ has its own partition of $L_k$ knot locations $\mathbf{x}_k = (x_{k,1}, \ldots, x_{k,L_k} ) \in \mathbb{R}^{L_k}_{+}$ and each $\mathbf{y}_k = (y_{k,1}, \ldots, y_{k,L_k+1} )$ is an alternating sequence of 0 and 1s of length $L_k$ indicating whether the server is open or closed respectively for the associated epoch. The vector $\mathbf{c}$ is used slightly differently to how it is used in \citet{sutton_bayesian_2011}. We use it to represent the time at which each server is next available for the current customer $i$, given the current system state $\mathbf{b}$. It is the output of the \code{next\_fun} function. 
+If Condition~\ref{eq:condition} does not hold or if, otherwise, we wish to control exactly which servers are open at what time then we must use a less computationally efficient algorithm (Algorithm~\ref{alg:changing_servers_unconditional}). Each server $k$ has its own partition of $L_k$ knot locations $\mathbf{x}_k = (x_{k,1}, \ldots, x_{k,L_k} ) \in \mathbb{R}^{L_k}_{+}$ and each $\mathbf{y}_k = (y_{k,1}, \ldots, y_{k,L_{k+1}} )$ is an alternating sequence of 0 and 1s of length $L_{k+1}$ indicating whether the server is open or closed respectively for the associated epoch. The vector $\mathbf{c}$ is used slightly differently to how it is used in \citet{sutton_bayesian_2011}. We use it to represent the time at which each server is next available for the current customer $i$, given the current system state $\mathbf{b}$. It is the output of the \code{next\_fun} function. 
 
 \begin{algorithm}[t!]
 \caption{Next function.}
@@ -534,8 +536,9 @@ number of open servers changing with time. In addition, we can specify
 which particular servers are available when, not just how many and we
 are not bound by Condition~\ref{eq:condition}. Once again we note that
 $\mathbf{b}$ can be considered as the system state and the event list
-is formed by $\mathbf{a}$ and the elements of
-$\mathbf{\underline{x}}$. This function can be called with the
+is formed by $\mathbf{a}$ and $\mathbf{x}_1, \dots, \mathbf{x}_K$, where 
+$K$ in this context is the total number of distinct servers.
+This function can be called with the
 \code{queue\_step} function in \pkg{queuecomputer} by supplying a
 `\code{server.list}' object to the \code{servers} argument. For the rest
 of this paper we focus on Algorithms~\ref{alg:fixed_servers}
@@ -660,7 +663,7 @@ departure times for each subjob and the departure time for the entire
 job is the maximum of each subjob.
 
 In \pkg{simmer} and \pkg{simpy} users supply generator functions for
-simulating $\mathbf{\delta}$ and service times $\mathbf{s}$, the user
+simulating $\boldsymbol{\delta}$ and service times $\mathbf{s}$, the user
 enters the set of input parameters $\theta_I$ for these generator
 functions and starts the simulation. The inter-arrival time is
 re-sampled after each arrival and the service time is sampled when the
@@ -718,7 +721,7 @@ R> head(sort(depart(queuecomputer_output)))
 %
 The DES packages \pkg{simmer} and \pkg{simpy} are not built to allow
 users to input $(\mathbf{a,s})$ directly. Rather, the user supplies
-parameters for $f_{\delta}$ and $f_{\mathbf{s}}$ so that inter-arrival
+parameters for $f_{\boldsymbol{\delta}}$ and $f_{\mathbf{s}}$ so that inter-arrival
 and service times can be sampled at each step when needed. To allow
 \pkg{simmer} and \pkg{simpy} to accept pre-sampled input
 $(\mathbf{a,s})$ we use generator functions instead of
