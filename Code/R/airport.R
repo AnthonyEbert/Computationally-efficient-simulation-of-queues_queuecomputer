@@ -1,20 +1,16 @@
+library("queuecomputer")
+library("dplyr")
+library("randomNames")
+library("FAdist")
+library("ggplot2")
+library("tidyr")
 
-
-
-library(queuecomputer)
-library(dplyr)
-#library(magrittr)
-library(randomNames)
-library(FAdist)
-library(ggplot2)
-library(tidyr)
-
+suppressWarnings(RNGversion("3.5"))
 set.seed(1)
-
 
 # Functions --------------------
 
-RandomFlightNumbers <- function(n){
+RandomFlightNumbers <- function(n) {
   working_df <- data.frame(
     First_Letter = sample(LETTERS, n, replace = TRUE),
     Second_Letter = sample(LETTERS, n, replace = TRUE),
@@ -29,20 +25,20 @@ RandomFlightNumbers <- function(n){
     Second_Number, Third_Number, sep = ""
   ))
   
-  output$Passengers = rbinom(n, size = 260, prob = 0.8)
-  output$arrival = round(rbeta(n, 2, 4) * 960 + 360, 2)
+  output$Passengers <- rbinom(n, size = 260, prob = 0.8)
+  output$arrival <- round(rbeta(n, 2, 4) * 960 + 360, 2)
   output <- output %>% mutate(chocks = 
       queue(arrival, service = rep(35, n), servers = 12, serveroutput = TRUE) - 30, 
     gate = attr(chocks, "server")
   )
   
-  output$type = factor(sample(letters[1:2], n, replace = TRUE, prob = c(0.4, 0.6)))
+  output$type <- factor(sample(letters[1:2], n, replace = TRUE, prob = c(0.4, 0.6)))
   
   
   return(output)
 }
 
-PassengerExpand <- function(input){
+PassengerExpand <- function(input) {
   output <- data.frame(
     ID = randomNames(input$Passengers),
     FlightNo = as.factor(rep(input$FlightNo, input$Passengers)),
@@ -59,7 +55,7 @@ PassengerExpand <- function(input){
 
 # Paramaterised Data --------------------------------------
 
-bag_rate = 10
+bag_rate <- 10
 
 gate_df <- data.frame(
   gate = c(1:15), 
@@ -85,11 +81,9 @@ FlightSchedule <- RandomFlightNumbers(120) %>%
   left_join(routing_df) %>%
   group_by(FlightNo)
 
-if(
-  (FlightSchedule %>% group_by(FlightNo) %>% 
+if ((FlightSchedule %>% group_by(FlightNo) %>% 
       summarise(numberp = n()) %>% 
-      dim())[1] != 120
-){
+      dim())[1] != 120) {
   warning("Duplicate flight numbers detected")
 }
 
@@ -149,7 +143,6 @@ Passenger_df %>%
     waiting_imm = mean(departures_imm - service_imm - arrive_imm), 
     waiting_bc = mean(departures_bc - departures_imm)
   )
-
 
 
 Passenger_df <- Passenger_df %>% ungroup()

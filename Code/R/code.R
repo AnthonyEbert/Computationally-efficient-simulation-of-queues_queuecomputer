@@ -1,22 +1,22 @@
+cat("Run 'python3 simpy_script.py 4 -v' before this R script \n")
 
-cat('Run "python3 simpy_benchmark3.py 4 -v" before this R script \n')
+library("simmer")
+library("queuecomputer")
+library("ggplot2")
+library("microbenchmark")
 
-library(simmer)
-library(queuecomputer)
-loadNamespace("dplyr")
-library(ggplot2)
-library(microbenchmark)
+suppressWarnings(RNGversion("3.5"))
 
 do_benchmarks <- TRUE # Do time-consuming benchmarks
 progress_bar <- TRUE # Have a progress bar for the benchmarks
 
-if(progress_bar){
+if (progress_bar) {
   pb <- txtProgressBar(min = 0, max = 6)
 }
 
 # Validation (Replication) ---------------------
 
-initialisation <- function(n){
+initialisation <- function(n) {
   set.seed(1)
   n_customers <<- 10^(n)
   lambda_a <<- 1/1
@@ -41,14 +41,14 @@ consume <- function(x) {
 
 simmer_step <- function(arrivals, service, servers) {
 	mm2.trajectory <- trajectory() %>%
-		seize("resource", amount=1) %>%
+		seize("resource", amount = 1) %>%
 		timeout(consume(service)) %>%
-		release("resource", amount=1)
+		release("resource", amount = 1)
 
 	mat <- simmer() %>%
-		add_resource("resource", capacity=servers, queue_size=Inf, mon=FALSE) %>%
+		add_resource("resource", capacity = servers, queue_size = Inf, mon = FALSE, preemptive = TRUE, preempt_order = "fifo") %>%
 		add_generator("arrival", mm2.trajectory, at(arrivals)) %>%
-		run(until=Inf) %>%
+		run(until = Inf) %>%
 		get_mon_arrivals()
 
 	return(mat[, 3])
@@ -56,54 +56,53 @@ simmer_step <- function(arrivals, service, servers) {
 
 
 
-cat('simmer output \n')
+cat("simmer output \n")
 
 simmer_output <- simmer_step(arrivals = arrivals, service = service, servers = 2)
 simmer_output %>% head
 
 ## SimPy -----------------------
 
-cat('simpy output \n')
+cat("simpy output \n")
 
-simpy_output <- read.csv('output/simpyoutput.csv', header = FALSE) %>% t %>% as.numeric
+simpy_output <- read.csv("output/simpyoutput.csv", header = FALSE) %>% t %>% as.numeric
 simpy_output %>% head
 
 ## queuecomputer ------------------
 
 length_out <- min(length(simmer_output), length(simpy_output)) # Last few customers need to be deleted 
 
-simmer_output <- simmer_output[1:length_out]
-simpy_output <- simpy_output[1:length_out]
+simmer_output <- sort(simmer_output)[1:length_out]
+simpy_output <- sort(simpy_output)[1:length_out]
 
-queuecomputer_output <- queue(
+queuecomputer_output <- sort(queue(
   arrivals = arrivals, 
   service = service, 
   servers = 2
-  )[1:length_out] %>% sort
+  ))[1:length_out]
 
-cat('queuecomputer output \n')
+cat("queuecomputer output \n")
 
 queuecomputer_output %>% head
 
 ## Overall -------------
 
-cat('Is queuecomputer output same as simmer output? \n')
+cat("Is queuecomputer output same as simmer output? \n")
 
-all( round(queuecomputer_output , 5) == round(simmer_output, 5))
+all(round(queuecomputer_output, 5) == round(simmer_output, 5))
 
-cat('Is queuecomputer output same as simpy output? \n')
+cat("Is queuecomputer output same as simpy output? \n")
 
-all( round(queuecomputer_output , 5) == round(simpy_output, 5))
+all(round(queuecomputer_output, 5) == round(simpy_output, 5))
 
 # Validation (Versus theoretical) ---------------
 
 ## Functions --------------------------
 
-P_0_func <- function(rhoK, k){
+P_0_func <- function(rhoK, k) {
   sum_i <- rep(NA, k)
   
-  for(i in 0:I(k-1))
-  {
+  for (i in 0:I(k-1)) {
     sum_i[i+1] <- rhoK^i / factorial(i)
   }
   
@@ -111,10 +110,10 @@ P_0_func <- function(rhoK, k){
   return(p_0)
 }
 
-P_n <- function(rhoK,n,k){
+P_n <- function(rhoK, n, k) {
   
   p_0 <- P_0_func(rhoK, k)
-  if(n <= (k-1)){
+  if (n <= (k-1)) {
     output <- rhoK^n / factorial(n) * p_0
   } else {
     output <- rhoK^n / (factorial(k) * k^(n-k)) * p_0
@@ -122,10 +121,10 @@ P_n <- function(rhoK,n,k){
   return(output)
 }
 
-Lq <- function(rhoK, k){
+Lq <- function(rhoK, k) {
   p_0 <- P_0_func(rhoK, k)
   
-  output <- p_0 * rhoK^{k+1} / ( factorial(k-1) * (k - rhoK)^2)
+  output <- p_0 * rhoK^{k+1} / (factorial(k-1) * (k - rhoK)^2)
   return(output)
 }
 
@@ -139,32 +138,31 @@ mu <- 1
 interarrivals <- rexp(n_customers, lambda)
 arrivals <- cumsum(interarrivals)
 service <- rexp(n_customers, mu)
-K = 3
+K <- 3
 
 ## Theoretical --------------------
 
 cat("Theoretical results for M/M/2 queueing system ########### \n")
 
 rho <- (1/mu) / (K/lambda)
-paste("rho", rho)
+cat("rho", rho, "\n")
 rhoK <- rho * K
 
 p_0 <- P_n(rhoK, 0, K)
 
 ### System lengths
-theoretical_system <- Vectorize(P_n, "n")(rhoK=rhoK, n=c(0:30), k = K)
+theoretical_system <- Vectorize(P_n, "n")(rhoK = rhoK, n = 0:30, k = K)
 
 ### Estimated queue length
 LQ <- Lq(rhoK, K)
 
 ### Estimated units in system
-paste("Expected customers in system", Lq(rhoK, K) + rhoK)
+cat("Expected customers in system", Lq(rhoK, K) + rhoK, "\n")
 
-Ws = 1/mu
-Wq = LQ / lambda
-#W = Ws + Wq
+Ws <- 1/mu
+Wq <- LQ / lambda
 
-paste("Expected waiting time", Wq)
+cat("Expected waiting time", Wq, "\n")
 
 ## Observed -------------------------
 
@@ -173,11 +171,11 @@ cat("Simulated results for M/M/2 queueing system ########### \n")
 MM3 <- queue_step(arrivals = arrivals, service = service, servers = K)
 summary(MM3)
 MM3_summary <- summary(MM3)
-paste("rho", MM3_summary$utilization)
+cat("rho", MM3_summary$utilization, "\n")
 
-paste("Average customers in system", MM3_summary$slength_mean)
+cat("Average customers in system", MM3_summary$slength_mean, "\n")
 
-paste("Average waiting time", MM3_summary$mwt)
+cat("Average waiting time", MM3_summary$mwt, "\n")
 
 
 ## Plots --------------------
@@ -196,40 +194,43 @@ ggplot(queue_system, aes(x = theoretical, y = observed, col = N)) +
 
 # Benchmark ---------------------
 
-if(do_benchmarks == TRUE){
+if (do_benchmarks == TRUE) {
 
   ## queuecomputer --------------
   
-  print("Start queuecomputer benchmark")
+  cat("Start queuecomputer benchmark\n")
   
   queuecomputer_times <- rep(NA, 6)
   
-  for(i in 1:6){
-  	initialisation(i+1)
-  	queuecomputer_times[i] <- (microbenchmark(
+  for (i in 1:6) {
+      initialisation(i+1)
+      queuecomputer_times[i] <- (microbenchmark(
   	  queue(
   	    arrivals = arrivals, 
   	    service = service, 
   	    servers = 2
   	    ), 
   	  unit = "ms")$time / 1e6) %>% median
-  	if(progress_bar){setTxtProgressBar(pb, i)}
+      if (progress_bar) {
+          setTxtProgressBar(pb, i)
+      }
   }
   
-  if(progress_bar){close(pb)}
+  if (progress_bar) {
+      close(pb)
+  }
   
-  print("queuecomputer benchmark complete")
+  cat("queuecomputer benchmark complete\n")
   
   write.csv(queuecomputer_times, file = "output/queuecomputer_times.csv")
   
   ## simmer ------------------
   
-  print("Start simmer benchmark")
+  cat("Start simmer benchmark\n")
 
   simmer_times <- rep(NA, 4)
   
-  for(i in 1:4){
-    
+  for (i in 1:4) {
   	initialisation(i+1)
     
   	simmer_times[i] <- (microbenchmark(
@@ -242,7 +243,9 @@ if(do_benchmarks == TRUE){
   	
     gc()
       
-    if(progress_bar){setTxtProgressBar(pb, i)}
+    if (progress_bar) {
+        setTxtProgressBar(pb, i)
+    }
   }
   
   initialisation(5+1)
@@ -257,9 +260,11 @@ if(do_benchmarks == TRUE){
   
   write.csv(simmer_times, file = "output/simmer_times.csv")
   
-  if(progress_bar){close(pb)}
+  if (progress_bar) {
+      close(pb)
+  }
   
-  paste("simmer benchmark complete")
+  cat("simmer benchmark complete\n")
 
 
   ## process raw simpy output ---------------

@@ -4,6 +4,10 @@ rm -f *.csv */*.csv *.pdf */*.pdf
 
 ## Run this bash script rather than executing the R and Python scripts directly. 
 
+# Create input data for simpy
+
+Rscript R/generate_data_for_simpy.R
+
 # Create departure times for 10^4 customer queue in simpy. See Python script for specifics of queue. 
 python3 python/simpy_script.py 4 -v 
 
@@ -25,7 +29,7 @@ pdftk Rplots.pdf cat 7 output queuelength_dplyr.pdf
 pdftk Rplots.pdf cat 8 output boxplot_dplyr.pdf
 
 rm Rplots.pdf
-cp *.pdf ../Figures
+cp *.pdf Figures
 rm *.pdf
 
 

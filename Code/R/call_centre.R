@@ -1,11 +1,9 @@
+library("queuecomputer")
+library("randomNames")
+library("ggplot2")
 
-
-
-
+suppressWarnings(RNGversion("3.5"))
 set.seed(1) 
-library(queuecomputer)
-library(randomNames)
-library(ggplot2)
 
 interarrivals <- rexp(20, 1)
 arrivals <- cumsum(interarrivals)

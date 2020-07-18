@@ -1,26 +1,11 @@
 
 import simpy
-from rpy2.robjects.packages import importr
-import rpy2.robjects as robjects
 import time
 import csv
 import numpy 
 import getopt
 import sys
 from mpmath import *
-
-robjects.r('''
-	initialisation <- function(n){
-	set.seed(1)
-	n_customers <- 10^n
-	lambda_a <- 1/1
-	lambda_s <- 1/0.9
-	interarrivals <<- rexp(n_customers, lambda_a)
-	arrivals <<- cumsum(interarrivals)
-	arrival_df <- data.frame(ID = c(1:n_customers), times = arrivals)
-	service <<- rexp(n_customers, lambda_s)
-}''')
-
 
 benchmark = 1
 
@@ -32,11 +17,15 @@ for o in sys.argv[1:]:
 
 arginput = int(float(arginput))
 
-r_initialisation = robjects.globalenv['initialisation']
-r_initialisation(arginput)
-
-interarrivals = robjects.r('interarrivals')
-service = robjects.r('service')
+if benchmark == 0:
+    input_data = numpy.loadtxt('output/input_for_simpy.csv', skiprows = 1, delimiter=',')
+    interarrivals = input_data[:,0]
+    service = input_data[:,1]
+    interarrivals = numpy.append(interarrivals, 1e6)
+    service = numpy.append(service, 1e6)
+else:
+    interarrivals = numpy.random.exponential(1, 10**arginput)
+    service = numpy.random.exponential(0.9, 10**arginput) 
 
 service_next = iter(service)
 arrival_next = iter(interarrivals)
@@ -52,7 +41,10 @@ def source(env, number, counter):
     """Source generates customers randomly"""
     yield env.timeout(next(arrival_next))
     for i in range(number):
-        t = next(arrival_next)
+        try:
+            t = next(arrival_next)
+        except StopIteration:
+            return
         c = customer(env, 'Customer%02d' % i, counter)
         env.process(c)
         yield env.timeout(t)
@@ -65,7 +57,10 @@ def customer(env, name, counter):
         # Wait for the counter or abort at the end of our tether
         results = yield req
         wait = env.now - arrive
-        tib = next(service_next)
+        try:
+            tib = next(service_next)
+        except StopIteration:
+            return
         yield env.timeout(tib)
         #print('%7.4f %s: Finished' % (env.now, name))
         data.append(env.now)
