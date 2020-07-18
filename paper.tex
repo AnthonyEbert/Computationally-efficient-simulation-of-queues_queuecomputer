@@ -567,7 +567,7 @@ R> arrivals <- cumsum(rexp(100))
 R> head(arrivals)
 \end{Sinput}
 \begin{Soutput}
-[1] 0.693512 1.693399 2.425550 3.952405 3.961906 4.405492
+[1] 0.7551818 1.9368246 2.0825313 2.2223266 2.6583952 5.5533638
 \end{Soutput}
 \begin{Sinput}
 R> service <- rexp(100)
@@ -576,19 +576,19 @@ R> departures
 \end{Sinput}
 \begin{Soutput}
 # A tibble: 100 x 6
-   arrivals     service departures      waiting system_time server
-      <dbl>       <dbl>      <dbl>        <dbl>       <dbl>  <dbl>
-1  0.693512 0.830158956   1.523671 0.000000e+00 0.830158956      1
-2  1.693399 0.817648174   2.511047 1.110223e-16 0.817648174      2
-3  2.425550 0.002675641   2.428226 2.138047e-16 0.002675641      1
-4  3.952405 0.667180991   4.619586 4.440892e-16 0.667180991      1
-5  3.961906 0.551920432   4.513827 4.440892e-16 0.551920432      2
-6  4.405492 1.069236762   5.583063 1.083341e-01 1.177570886      2
-7  4.594253 1.110448926   5.730035 2.533279e-02 1.135781711      1
-8  4.993053 0.766944956   6.350008 5.900099e-01 1.356954853      2
-9  6.047412 0.805061421   6.852474 1.110223e-16 0.805061421      1
-10 6.856338 1.317802131   8.174140 0.000000e+00 1.317802131      2
-# ... with 90 more rows
+arrivals service departures   waiting system_time server
+<dbl>   <dbl>      <dbl>     <dbl>       <dbl>  <int>
+1    0.755   1.90        2.66 -2.22e-16       1.90       1
+2    1.94    0.516       2.45  0.             0.516      2
+3    2.08    0.449       2.90  3.70e- 1       0.819      2
+4    2.22    0.380       3.03  4.33e- 1       0.812      1
+5    2.66    1.25        4.15  2.44e- 1       1.49       2
+6    5.55    2.69        8.25  4.44e-16       2.69       1
+7    6.78    0.196       6.98 -2.50e-16       0.196      2
+8    7.32    2.30        9.62  0.             2.30       2
+9    8.28    0.566       8.84  0.             0.566      1
+10    8.43    0.763       9.61  4.19e- 1       1.18       1
+# … with 90 more rows
 \end{Soutput}
 \end{CodeChunk}
 %
@@ -602,19 +602,19 @@ R> summary(departures)
 \end{Sinput}
 \begin{Soutput}
 Total customers:
- 100
+100
 Missed customers:
- 0
+0
 Mean waiting time:
- 0.246
+0.18
 Mean response time:
- 1.11
+1.15
 Utilization factor:
- 0.53
+0.466341252182172
 Mean queue length:
- 0.301
+0.174
 Mean number of customers in system:
- 1.36
+1.11
 \end{Soutput}
 \end{CodeChunk}
 %
