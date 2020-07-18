@@ -267,11 +267,10 @@ average waiting time for customers. If $\lambda < K \mu$ the queueing
 system will eventually reach equilibrium and distributions of
 performance measures become independent of time.
 
-In the case of a $M/M/K$ system equilibrium distributions for
-performance measures can be derived analytically. These derivations are 
-found in standard queueing theory textbooks \citep{lipsky2008queueing,
-  thomopoulos2012fundamentals}. For instance, the limit probability of
-$N$ customers in the system $\Prob(N)$ is
+In the case of a $M/M/K$ system, these performance measures have 
+equilibrium distributions which can be derived analytically. These derivations are 
+found in standard queueing theory textbooks \citep{lipsky2008queueing,thomopoulos2012fundamentals}. 
+For instance, the limit probability of $N$ customers in the system $\Prob(N)$ is
 %
 \begin{align}
 \Prob(0) &= \left[\frac{ (K \rho)^K}{K! (1 - \rho)} + 1 + \sum_{i=1}^{K-1} \frac{(K \rho)^i}{i!}   \right]^{-1}, \nonumber \\
@@ -311,9 +310,9 @@ distributions are derived by \citet{armero1994bayesian,
 In a tandem queueing network, customers traverse an ordered series of
 queues before departing the system. Real examples of such systems
 include airport terminals, internet services and manufacturing
-systems. In a parallel network, customers are partitioned into
+systems. In a parallel network, the set of customers is partitioned into
 different queueing systems, with their own two vectors $\mathbf{a}$ and $\mathbf{s}$.
-In a fork/join network a task (another term for customer) is split into
+In a fork/join network each task (another term for customer) is split into
 a number of subtasks which are to be completed by distinct parallel
 servers. The task is only complete once all its associated subtasks arrive
 at the join point. One example of this situation is that of arriving passengers
