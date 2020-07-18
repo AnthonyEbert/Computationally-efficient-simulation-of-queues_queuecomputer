@@ -5,6 +5,10 @@ library("queuecomputer")
 library("ggplot2")
 library("microbenchmark")
 
+# Usage
+
+source("R/usage.R")
+
 suppressWarnings(RNGversion("3.5"))
 
 do_benchmarks <- TRUE # Do time-consuming benchmarks
