@@ -169,7 +169,7 @@ ggplot(PQ_df) +
   xlab("Time (min since 12am)") + 
   ylab("Queue length")
 
-# ggsave("examples/queuelength_dplyr.pdf")
+ggsave("output/queuelength_dplyr.pdf")
 
 Passenger_df <- Passenger_df %>% ungroup()
 
@@ -193,7 +193,7 @@ ggplot(PBox_df) +
   ylab("Waiting time (min)") + 
   ggtitle("Boxplot of waiting times")
 
-# ggsave("examples/boxplot_dplyr.pdf")
+ggsave("output/boxplot_dplyr.pdf")
 
 
 
